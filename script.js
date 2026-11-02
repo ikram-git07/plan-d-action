@@ -10,19 +10,17 @@ const liste = document.querySelector("#liste");
 const erreur = document.querySelector("#erreur")
 
 
-
 let contacts = [
     { id: 1, nom: "Ikram", tel: "0754687329" },
     { id: 2, nom: "Mery", tel: "0757293451" }
-
 ];
  
 let enEdition = null; 
 
-function afficher() {
+function afficher( tableau = contacts) {
     liste.innerHTML = "";
 
-    contacts.forEach((c) => {
+    tableau.forEach((c) => {
         const li = document.createElement("li");
         li.textContent = c.nom + " - " + c.tel;
 
@@ -48,7 +46,7 @@ function afficher() {
 
     });
 
-    compteur.textContent = contacts.length + " contact(s)";
+    compteur.textContent = tableau.length + " contact(s)";
 }
 
 form.addEventListener("submit", (e) => {
@@ -99,7 +97,14 @@ liste.addEventListener("click", (e) => {
 
 
 afficher();
-
+ function filtrerEtAfficher (){
+    const texte = recherche.value.trim().toLowerCase();
+    const resultat = contacts.filter((c) => 
+    c.nom.toLocaleLowerCase().includes(texte)
+);
+afficher(resultat);
+ }
+ recherche.addEventListener("input", filtrerEtAfficher);
 
 
 
