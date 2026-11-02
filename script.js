@@ -16,6 +16,8 @@ let contacts = [
     { id: 2, nom: "Mery", tel: "0757293451" }
 
 ];
+ 
+let enEdition = null; 
 
 function afficher() {
     liste.innerHTML = "";
@@ -23,7 +25,7 @@ function afficher() {
     contacts.forEach((c) => {
         const li = document.createElement("li");
         li.textContent = c.nom + " - " + c.tel;
-       
+
 
 
 
@@ -32,8 +34,18 @@ function afficher() {
         btn.className = "supprimer";
         btn.dataset.id = c.id;
 
-        li.append(btn);
+        const btnm = document.createElement("button");
+        btnm.textContent = "Modifier";
+        btnm.className = "modifier";
+        btnm.dataset.id = c.id;
+
+
+
+
+        li.append(btnm, btn);
+
         liste.append(li);
+
     });
 
     compteur.textContent = contacts.length + " contact(s)";
@@ -50,21 +62,41 @@ form.addEventListener("submit", (e) => {
         return;
     }
     erreur.textContent = "";
-    contacts.push({ id: Date.now(), nom: nom, tel: tel });
+    if (enEdition !== null){
+        const contact = contacts.find ((c) => c.id === enEdition);
+        contact.nom = nom;
+        contact.tel = tel;
+        enEdition = null;
+        botoun.textContent = "Ajouter";
+    }else{
+        contacts.push({id: Date.now(), nom: nom, tel: tel   });
+
+    }
     form.reset();
     afficher();
 
-    
+
 
 
 });
 liste.addEventListener("click", (e) => {
-        if (e.target.matches(".supprimer")) {
-            const id = Number(e.target.dataset.id);
-            contacts = contacts.filter((c) => c.id !== id);
-            afficher();
-        }
-    });
+    if (e.target.matches(".supprimer")) {
+        const id = Number(e.target.dataset.id);
+        contacts = contacts.filter((c) => c.id !== id);
+        afficher();
+    }
+    if (e.target.matches(".modifier")) {
+        const id = Number(e.target.dataset.id);
+        const contact = contacts.find((c) => c.id === id ) ;
+        inputNom.value = contact.nom;
+        inputTele.value = contact.tel;
+        enEdition = id;
+        botoun.textContent = "Enregistrer";
+
+    }
+
+});
+
 
 afficher();
 
